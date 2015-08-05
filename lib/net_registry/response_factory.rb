@@ -34,35 +34,35 @@ module NetRegistry
     # Preliminary validation for the purchase method
     # Returns a Response Object
     def self.validate_purchase_params(params)
-      if params[:AMOUNT].empty?
-        return "Missing amount", false
-      elsif params[:CCNUM].empty?
-        return "Missing Card Number", false
-      elsif params[:CCEXP].empty?
-        return "Missing Card Expiry", false
+      if params[:AMOUNT].nil?   || params[:AMOUNT].empty?
+        return "AMOUNT not found", false
+      elsif params[:CCNUM].nil? || params[:CCNUM].empty?
+        return "CCNUM not found", false
+      elsif params[:CCEXP].nil? || params[:CCEXP].empty?
+        return "CCEXP not found", false
       elsif !valid_expiry_format?(params[:CCEXP])
-        return "Invalid Card Expiry format", false
+        return "CCEXP invalid format", false
       else
         return "", true
       end
     end
 
     def self.validate_refund_params(params)
-      if params[:AMOUNT].empty?
-        return "Missing amount", false
-      elsif params[:TXNREF].empty?
-        return "Missing transaction reference", false
+      if params[:AMOUNT].nil? || params[:AMOUNT].empty?
+        return "AMOUNT not found", false
+      elsif params[:TXNREF].nil? || params[:TXNREF].empty?
+        return "TXNREF not found", false
       else
         return "", true
       end
     end
 
     def self.validate_preauth_params(params)
-      if params[:CCNUM].empty?
+      if params[:CCNUM].nil? || params[:CCNUM].empty?
         return "Missing Credit Card Number", false
-      elsif params[:CCEXP].empty?
+      elsif params[:CCEXP].nil? || params[:CCEXP].empty?
         return "Missing transaction reference", false
-      elsif params[:AMOUNT].empty?
+      elsif params[:AMOUNT].nil? || params[:AMOUNT].empty?
         return "Missing amount", false
       else
         return "", true
@@ -70,7 +70,7 @@ module NetRegistry
     end
 
     def self.validate_status_params(params)
-      if params[:TXNREF].empty?
+      if params[:TXNREF].nil? || params[:TXNREF].empty?
         return "Missing transaction reference", false
       else
         return "", true

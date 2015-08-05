@@ -6,7 +6,7 @@ module NetRegistry
     attr_accessor :merchant, :password
     attr_accessor :base_url
 
-    def initialize(merchant, password)
+    def initialize(merchant = ENV["NET_REGISTRY_MERCHANT"], password = ENV["NET_REGISTRY_PASSWORD"])
       @merchant, @password = merchant, password
       @base_url = "https://paygate.ssllock.net/external2.pl"
     end
@@ -21,7 +21,7 @@ module NetRegistry
       params = process_hash(params).merge(LOGIN:   "#{@merchant}/#{@password}",
                                           COMMAND: "purchase")
       net_response = NetRegistry::ResponseFactory.create("purchase", params)
-      return net_response if !net_response.failed?
+      return net_response if net_response.failed?
 
       uri = URI(@base_url)
       res = Net::HTTP.post_form(uri, params)
@@ -33,6 +33,8 @@ module NetRegistry
       params = process_hash(params).merge(LOGIN:   "#{@merchant}/#{@password}",
                                           COMMAND: "refund")
       net_response = NetRegistry::ResponseFactory.create("refund", params)
+      return net_response if net_response.failed?
+
       uri = URI(@base_url)
       res = Net::HTTP.post_form(uri, params)
       net_response.parse(res.body)
@@ -60,21 +62,9 @@ module NetRegistry
 
     private
 
-    def hash_to_query(hash)
-      URI.encode(hash.map{|k,v| "#{k}=#{v}"}.join("&"))
-    end
     def process_hash(hash)
       hash.each { |key, value| hash[key] = value.to_s }
     end
 
-    def valid_expiry_format?(card_expiry)
-      raise TypeError if !card_expiry.is_a?(String)
-      begin
-        Date.parse(card_expiry)
-        !NetRegistry::Helpers::EXPIRY_REGEX.match(card_expiry).nil?
-      rescue ArgumentError
-        false
-      end
-    end
   end
 end

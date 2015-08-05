@@ -1,6 +1,6 @@
 module NetRegistry
   class Response
-    attr_accessor :response_text, :response_code, :status
+    attr_accessor :text, :code, :status
 
     def initialize(response = "")
       # Defaults to failed response
@@ -25,9 +25,8 @@ module NetRegistry
     end
 
     def failed?
-      @failed == true ||
-        @full_response.first == "failed" ||
-        @response_code == -1
+      @code == -1 ||
+        (!@full_response.nil? && @full_response.first == "failed")
     end
 
   end
