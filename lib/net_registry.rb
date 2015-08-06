@@ -3,6 +3,7 @@ require "net_registry/client"
 require "net_registry/response"
 require "net_registry/response_factory"
 require "net_registry/helpers"
+require "net_registry/errors"
 
 module NetRegistry
 

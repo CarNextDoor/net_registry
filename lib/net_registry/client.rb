@@ -15,12 +15,10 @@ module NetRegistry
     end
 
     def command(params = {})
-      raise TypeError            if !params.is_a?(Hash)
-      raise CommandNotFoundError if !commands.include?(params[:COMMAND])
+      raise TypeError, "params is not a hash" if !params.is_a?(Hash)
       params.merge!(LOGIN: @LOGIN, COMMAND: params[:COMMAND])
       @factory.verify_params(params) ? send_request(params) : @factory.create
     end
-
 
     private
 

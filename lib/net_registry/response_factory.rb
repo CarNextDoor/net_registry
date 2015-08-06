@@ -23,7 +23,8 @@ module NetRegistry
       when "status"
         @response.text, success = validate_status_params(params)
       else
-        nil
+        @response.text = "Invalid command. Only [purchase status preauth refund] are valid."
+        success        = false
       end
       @response.code   = 0  if success
       @response.status = "" if success
