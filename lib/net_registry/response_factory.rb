@@ -1,34 +1,53 @@
 module NetRegistry
   class ResponseFactory
 
-    # Parameters:
+    attr_accessor :response
+
+    def initialize
+      @response = NetRegistry::Response.new
+    end
+
     # command (String): Denotes which action we're taking.
     #                   Only accepts the following actions:
     #                   purchase, refund, preauth, status.
     # params (Hash):    Variables to pass to NetRegistry
-    def self.create(command, **params)
-      response = NetRegistry::Response.new
+    def verify_params(params = {})
       success  = false
-      case command
+      case params[:COMMAND]
       when "purchase"
-        response.text, success = validate_purchase_params(params)
+        @response.text, success = validate_purchase_params(params)
       when "refund"
-        response.text, success = validate_refund_params(params)
+        @response.text, success = validate_refund_params(params)
       when "preauth"
-        response.text, success = validate_preauth_params(params)
+        @response.text, success = validate_preauth_params(params)
       when "status"
-        response.text, success = validate_status_params(params)
+        @response.text, success = validate_status_params(params)
       else
         nil
       end
-      response.code   = 0  if success
-      response.status = "" if success
+      @response.code   = 0  if success
+      @response.status = "" if success
 
-      response
+      @response.success?
     end
 
-    private
-    def initialize; end
+    def create
+      @response
+    end
+
+    def parse(response)
+      raise TypeError if !response.is_a?(String)
+      @full_response = response.split("\n").map(&:strip)
+
+      lines = @full_response.drop_while do |x|
+        puts x
+        x != "Reciept follows"
+      end
+
+      puts lines
+
+      self
+    end
 
     protected
     # Preliminary validation for the purchase method

@@ -1,6 +1,6 @@
 module NetRegistry
   class Response
-    attr_accessor :text, :code, :status
+    attr_accessor :text, :code, :status, :full_response
 
     def initialize(response = "")
       # Defaults to failed response
@@ -10,23 +10,13 @@ module NetRegistry
       parse(response)
     end
 
-    def parse(response)
-      raise TypeError if !response.is_a?(String)
-      @full_response = response.split("\n").map(&:strip)
-
-      lines = @full_response.drop_while do |x|
-        puts x
-        x != "Reciept follows"
-      end
-
-      puts lines
-
-      self
-    end
-
     def failed?
       @code == -1 ||
         (!@full_response.nil? && @full_response.first == "failed")
+    end
+
+    def success?
+      !failed?
     end
 
   end
