@@ -3,7 +3,7 @@ require 'date'
 module NetRegistry
   class ResponseFactory
 
-    attr_accessor :response
+    attr_reader :response
 
     def initialize
       @response = NetRegistry::Response.new
@@ -84,11 +84,13 @@ module NetRegistry
 
     def validate_preauth_params(params)
       if params[:CCNUM].nil? || params[:CCNUM].empty?
-        return "Missing Credit Card Number", false
+        return "CCNUM not found", false
       elsif params[:CCEXP].nil? || params[:CCEXP].empty?
-        return "Missing transaction reference", false
+        return "CCEXP not found", false
+      elsif !valid_expiry_format?(params[:CCEXP])
+        return "CCEXP invalid format", false
       elsif params[:AMOUNT].nil? || params[:AMOUNT].empty?
-        return "Missing amount", false
+        return "AMOUNT not found", false
       else
         return "", true
       end
@@ -96,7 +98,7 @@ module NetRegistry
 
     def validate_status_params(params)
       if params[:TXNREF].nil? || params[:TXNREF].empty?
-        return "Missing transaction reference", false
+        return "TXNREF not found", false
       else
         return "", true
       end
