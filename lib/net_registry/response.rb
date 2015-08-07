@@ -2,12 +2,8 @@ module NetRegistry
   class Response
     attr_accessor :text, :code, :status, :full_response
 
-    def initialize(response = "")
-      # Defaults to failed response
-      @text   = "Unknown Error"
-      @code   = -1
-      @status = "failed"
-      parse(response)
+    def initialize(text: "Unknown Error", code: -1, status: "failed")
+      @text, @code, @status = text, code, status
     end
 
     def failed?

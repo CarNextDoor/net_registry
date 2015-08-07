@@ -1,3 +1,5 @@
+require 'date'
+
 module NetRegistry
   class ResponseFactory
 
@@ -13,6 +15,7 @@ module NetRegistry
     # params (Hash):    Variables to pass to NetRegistry
     def verify_params(params = {})
       success  = false
+      params = process_params(params)
       case params[:COMMAND]
       when "purchase"
         @response.text, success = validate_purchase_params(params)
@@ -39,6 +42,11 @@ module NetRegistry
     def parse(response)
       raise TypeError if !response.is_a?(String)
       @full_response = response.split("\n").map(&:strip)
+      if @full_response.first == "failed"
+        @text   = @full_response.second
+        @status = "failed"
+        @code   = -1
+      end
 
       lines = @full_response.drop_while do |x|
         puts x
@@ -53,7 +61,7 @@ module NetRegistry
     protected
     # Preliminary validation for the purchase method
     # Returns a Response Object
-    def self.validate_purchase_params(params)
+    def validate_purchase_params(params)
       if params[:AMOUNT].nil?   || params[:AMOUNT].empty?
         return "AMOUNT not found", false
       elsif params[:CCNUM].nil? || params[:CCNUM].empty?
@@ -67,7 +75,7 @@ module NetRegistry
       end
     end
 
-    def self.validate_refund_params(params)
+    def validate_refund_params(params)
       if params[:AMOUNT].nil? || params[:AMOUNT].empty?
         return "AMOUNT not found", false
       elsif params[:TXNREF].nil? || params[:TXNREF].empty?
@@ -77,7 +85,7 @@ module NetRegistry
       end
     end
 
-    def self.validate_preauth_params(params)
+    def validate_preauth_params(params)
       if params[:CCNUM].nil? || params[:CCNUM].empty?
         return "Missing Credit Card Number", false
       elsif params[:CCEXP].nil? || params[:CCEXP].empty?
@@ -89,7 +97,7 @@ module NetRegistry
       end
     end
 
-    def self.validate_status_params(params)
+    def validate_status_params(params)
       if params[:TXNREF].nil? || params[:TXNREF].empty?
         return "Missing transaction reference", false
       else
@@ -98,7 +106,7 @@ module NetRegistry
     end
 
 
-    def self.valid_expiry_format?(card_expiry)
+    def valid_expiry_format?(card_expiry)
       raise TypeError if !card_expiry.is_a?(String)
       begin
         Date.parse(card_expiry)
@@ -106,6 +114,12 @@ module NetRegistry
       rescue ArgumentError
         false
       end
+    end
+
+    # Pre-process parameters. In this instance, pre-process
+    # all parameters into strings, for easy params validation
+    def process_params(params)
+      params.each { |key, value| params[key] = value.to_s }
     end
   end
 
