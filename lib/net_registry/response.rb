@@ -1,6 +1,7 @@
 module NetRegistry
   class Response
-    attr_accessor :text, :code, :status, :full_response
+    attr_accessor :text, :status, :full_response
+    attr_reader   :code
 
     def initialize(text: "Unknown Error", code: -1, status: "failed")
       @text, @code, @status = text, code, status
@@ -13,6 +14,10 @@ module NetRegistry
 
     def success?
       !failed?
+    end
+
+    def code=(code)
+      @code = code.to_i
     end
 
   end

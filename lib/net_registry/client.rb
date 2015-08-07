@@ -14,7 +14,27 @@ module NetRegistry
       @factory  = NetRegistry::ResponseFactory.new
     end
 
-    def command(params = {})
+    def purchase(params = {})
+      raise TypeError, "params is not a hash" if !params.is_a?(Hash)
+      request(params.merge!(COMMAND: "purchase"))
+    end
+
+    def refund(params = {})
+      raise TypeError, "params is not a hash" if !params.is_a?(Hash)
+      request(params.merge!(COMMAND: "refund"))
+    end
+
+    def status(params = {})
+      raise TypeError, "params is not a hash" if !params.is_a?(Hash)
+      request(params.merge!(COMMAND: "status"))
+    end
+
+    def preauth(params = {})
+      raise TypeError, "params is not a hash" if !params.is_a?(Hash)
+      request(params.merge!(COMMAND: "preauth"))
+    end
+
+    def request(params = {})
       raise TypeError, "params is not a hash" if !params.is_a?(Hash)
       params.merge!(LOGIN: @LOGIN, COMMAND: params[:COMMAND])
       @factory.verify_params(params) ? send_request(params) : @factory.create

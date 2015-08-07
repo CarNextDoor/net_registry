@@ -40,7 +40,7 @@ module NetRegistry
     end
 
     def parse(response)
-      raise TypeError if !response.is_a?(String)
+      raise TypeError, "Response is not a string" if !response.is_a?(String)
       @full_response = response.split("\n").map(&:strip)
       if @full_response.first == "failed"
         @text   = @full_response.second
@@ -49,11 +49,8 @@ module NetRegistry
       end
 
       lines = @full_response.drop_while do |x|
-        puts x
         x != "Reciept follows"
       end
-
-      puts lines
 
       self
     end
