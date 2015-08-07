@@ -36,7 +36,7 @@ module NetRegistry
 
     def request(params = {})
       raise TypeError, "params is not a hash" if !params.is_a?(Hash)
-      params.merge!(LOGIN: @LOGIN, COMMAND: params[:COMMAND])
+      params.merge!(LOGIN: @LOGIN)
       @factory.verify_params(params) ? send_request(params) : @factory.create
     end
 

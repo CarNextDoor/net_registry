@@ -1,0 +1,49 @@
+require "spec_helper"
+
+RSpec.describe NetRegistry::Card do
+  let(:card) { NetRegistry::Card.new }
+  describe "#number" do
+    it "assigns number" do
+      number = "111111111111"
+      expect(card.number).to be_nil
+      card.number = number
+      expect(card.number).to eq(number)
+    end
+  end
+
+  describe "#description" do
+    it "assigns description" do
+      desc = "VISA"
+      expect(card.description).to be_nil
+      card.description= desc
+      expect(card.description).to eq(desc)
+    end
+  end
+
+  describe "#expiry" do
+    it "assigns expiry" do
+      expiry = "10/15"
+      expect(card.expiry).to be_nil
+      card.expiry = expiry
+      expect(card.expiry).to eq(expiry)
+    end
+  end
+
+  describe "#ccv" do
+    it "assigns CCV" do
+      ccv = "935"
+      expect(card.ccv).to be_nil
+      card.ccv = ccv
+      expect(card.ccv).to eq(ccv)
+    end
+  end
+
+  describe "#type" do
+    it "assigns type" do
+      type = "9"
+      expect(card.type).to be_nil
+      card.type = type
+      expect(card.type).to eq(type)
+    end
+  end
+end

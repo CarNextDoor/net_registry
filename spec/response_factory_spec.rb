@@ -1,8 +1,38 @@
 require "spec_helper"
 RSpec.describe NetRegistry::ResponseFactory do
   let(:factory) { NetRegistry::ResponseFactory.new }
+  let(:invalid_login_format) do
+    <<-RESPONSE
+    failed
+    Invalid login format
+    RESPONSE
+  end
+  let(:invalid_credit_card_number) do
+    <<-RESPONSE
+    failed
+
+
+    .
+    response_text=Invalid Credit card number
+    status=failed
+    response_code=-1
+    result=-1
+    RESPONSE
+  end
   describe "#init" do
     it { expect(factory.response.class).to be(NetRegistry::Response) }
+  end
+
+  describe "#parse" do
+    context "response is not a string" do
+      it { expect {factory.parse(1)}.to raise_error(TypeError)}
+    end
+    context "failed response (invalid params)" do
+      it { expect(factory.parse(invalid_credit_card_number).create.text).to eq("Invalid Credit card number") }
+    end
+    context "failed response (invalid login)" do
+      it { expect(factory.parse(invalid_login_format).create.text).to eq("Invalid login format") }
+    end
   end
 
   describe "#create" do

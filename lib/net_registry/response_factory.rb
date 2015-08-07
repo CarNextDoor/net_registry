@@ -39,17 +39,24 @@ module NetRegistry
       @response
     end
 
+    # parse HTTP request response body into a response object
+    # return factory itself.
+    # To get the response object, use #create method
     def parse(response)
       raise TypeError, "Response is not a string" if !response.is_a?(String)
       @full_response = response.split("\n").map(&:strip)
       if @full_response.first == "failed"
-        @text   = @full_response.second
-        @status = "failed"
-        @code   = -1
-      end
-
-      lines = @full_response.drop_while do |x|
-        x != "Reciept follows"
+        # remove all spaces until the dot
+        lines = @full_response.drop_while { |x| x != "." }
+        if lines.empty?
+          @response.text = @full_response[1]
+        else
+          lines.shift
+          lines[0].slice!("response_text=")
+          @response.text = lines[0]
+        end
+        @response.status = "failed"
+        @response.code   = -1
       end
 
       self
