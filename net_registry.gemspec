@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{This gem serves as a Ruby wrapper for the NetRegistry Payment Gateway's
 API.}
   spec.description   = %q{This gem serves as a Ruby wrapper for the NetRegistry Payment Gateway's
-API. Official documentation can be found at http://www.netregistry.com.au/ee-images/uploads/support/NR-ecom-gateway8.pdf}
+API. Official documentation can be found at http://www.netregistry.com.au/ee-images/uploads/support/NR-ecom-gateway8.pdf. Source can be found on https://github.com/carnextnoor/net_registry}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -44,6 +44,7 @@ API. Official documentation can be found at http://www.netregistry.com.au/ee-ima
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
+  spec.required_ruby_version = '>= 2.0'
 
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"
