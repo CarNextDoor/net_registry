@@ -3,7 +3,7 @@ require "spec_helper"
 RSpec.describe NetRegistry::Client do
   let(:username) { "username" }
   let(:password) { "password" }
-  let(:client)   { NetRegistry::Client.new(username, password) }
+  let(:client)   { NetRegistry::Client.new(merchant_id: username, password: password) }
   let(:params)   do
     {
       AMOUNT: "100.0",
@@ -87,7 +87,7 @@ RSpec.describe NetRegistry::Client do
   end
 
   describe "#initialize" do
-    it { expect(client.merchant).to eq(username) }
+    it { expect(client.merchant_id).to eq(username) }
     it { expect(client.password).to eq(password) }
   end
 
