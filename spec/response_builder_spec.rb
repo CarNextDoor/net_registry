@@ -1,14 +1,14 @@
 require "spec_helper"
-RSpec.describe NetRegistry::ResponseFactory do
-  let(:factory) { NetRegistry::ResponseFactory.new }
+RSpec.describe NetRegistry::ResponseBuilder do
+  let(:factory) { NetRegistry::ResponseBuilder.new }
   let(:invalid_login_format) do
-    <<-RESPONSE
+    <<-RESPONSE.gsub(/^\s+/, "")
     failed
     Invalid login format
     RESPONSE
   end
   let(:invalid_credit_card_number) do
-    <<-RESPONSE
+    <<-RESPONSE.gsub(/^\s+/, "")
     failed
 
 
@@ -20,10 +20,10 @@ RSpec.describe NetRegistry::ResponseFactory do
     RESPONSE
   end
   let(:status_invalid_transaction) do
-    <<-RESPONSE
+    <<-RESPONSE.gsub(/^\s+/, "")
     card_number=XXXXXXXXXXXX1111
     settlement_date=31/07/00
-    response_text=INVALID TRANSACTION
+    response_text=INVALID TRANSACTION
     amount=100
     status=complete
     txnref=0007311428202312
@@ -33,9 +33,59 @@ RSpec.describe NetRegistry::ResponseFactory do
     card_expiry=01/01
     MID=24
     card_type=6
-    time=2000­07­31 14:28:20
+    time=2000­07­31 14:28:20
     command=purchase
     result=0
+    .
+    done=1
+    RESPONSE
+  end
+  let(:purchase_invalid_transaction) do
+    <<-RESPONSE.gsub(/^\s+/, "")
+    training_mode=0
+    pld=0
+    approved=0
+    settlement_date=31/07/00
+    transaction_no=332546
+    status=declined
+    version=V1.0
+    operator_no=22546
+    refund_mode=0
+    merchant_index=24
+    response_code=12
+    receipt_array=ARRAY(0x8221b9c)
+    cashout_amount=0
+    account_type=CREDIT A/C
+    rrn=000782000024
+    response_text=INVALID TRANSACTION
+    txn_ref=0007311458332546
+    card_no=4111111111111111
+    total_amount=100
+    card_desc=VISA
+    card_expiry=01/01
+    card_type=6
+    result=0
+    Reciept follows
+    Transaction No: 00332546
+    ­­­­­­­­­­­­­­­­­­­­­­­­
+    TYRELL CORPORATION    
+    MERCH ID        99999999
+    TERM  ID          Y9TB99
+    COUNTRY CODE AU
+    31/07/00           14:32
+    RRN         000782000024
+    VISA
+    411111­111
+    CREDIT A/C         01/01
+    AUTHORISATION  NO:
+    DECLINED   12
+    PURCHASE           $1.00
+    TOTAL   AUD        $1.00
+    PLEASE RETAIN AS RECORD 
+    OF PURCHASE
+    (SUBJECT TO CARDHOLDER'S
+    ACCEPTANCE)      
+    ­­­­­­­­­­­­­­­­­­­­­­­­
     .
     done=1
     RESPONSE
@@ -70,18 +120,68 @@ RSpec.describe NetRegistry::ResponseFactory do
       before :each do
         @response = factory.parse(status_invalid_transaction).create
       end
-      it { expect(@response.text).to eq("INVALID TRANSACTION") }
-      it { expect(@response.transaction.card.number).to eq("XXXXXXXXXXXX1111") }
-      it { expect(@response.transaction.amount).to eq("100") }
+      it { expect(@response.text).to eq("INVALID TRANSACTION") }
       it { expect(@response.status).to eq("complete") }
-      it { expect(@response.transaction.reference).to eq("0007311428202312") }
-      it { expect(@response.transaction.bank_reference).to eq("000731000024")}
-      it { expect(@response.transaction.card.description).to eq("VISA")}
       it { expect(@response.code).to eq(12) }
-      it { expect(@response.transaction.card.type).to eq("6")}
-      it { expect(@response.transaction.time).to eq("2000­07­31 14:28:20")}
-      it { expect(@response.transaction.command).to eq("purchase")}
       it { expect(@response.result).to eq(0)}
+
+      it { expect(@response.transaction.amount).to eq("100") }
+      it { expect(@response.transaction.reference).to eq("0007311428202312") }
+      it { expect(@response.transaction.time).to eq("2000­07­31 14:28:20")}
+      it { expect(@response.transaction.command).to eq("purchase")}
+      it { expect(@response.transaction.settlement_date).to eq("31/07/00")}
+      it { expect(@response.transaction.bank_reference).to eq("000731000024")}
+      it { expect(@response.transaction.merchant_id).to eq("24")}
+
+      it { expect(@response.transaction.card.number).to eq("XXXXXXXXXXXX1111") }
+      it { expect(@response.transaction.card.description).to eq("VISA")}
+      it { expect(@response.transaction.card.type).to eq("6")}
+      it { expect(@response.transaction.card.expiry).to eq("01/01")}
+
+    end
+
+    context "#purchase_invalid_transaction" do
+      before :each do
+        @response = factory.parse(purchase_invalid_transaction).create
+        @receipt  = <<-RECEIPT.gsub(/^\s+/, "")
+        Transaction No: 00332546
+        ­­­­­­­­­­­­­­­­­­­­­­­­
+        TYRELL CORPORATION    
+        MERCH ID        99999999
+        TERM  ID          Y9TB99
+        COUNTRY CODE AU
+        31/07/00           14:32
+        RRN         000782000024
+        VISA
+        411111­111
+        CREDIT A/C         01/01
+        AUTHORISATION  NO:
+        DECLINED   12
+        PURCHASE           $1.00
+        TOTAL   AUD        $1.00
+        PLEASE RETAIN AS RECORD 
+        OF PURCHASE
+        (SUBJECT TO CARDHOLDER'S
+        ACCEPTANCE)      
+        ­­­­­­­­­­­­­­­­­­­­­­­­
+        RECEIPT
+      end
+      it { expect(@response.text).to eq("INVALID TRANSACTION") }
+      it { expect(@response.transaction.reference).to eq("0007311458332546") }
+      it { expect(@response.transaction.rrn).to eq("000782000024")}
+      it { expect(@response.result).to eq(0)}
+      it { expect(@response.code).to eq(12)}
+      it { expect(@response.status).to eq("declined")}
+
+      it { expect(@response.transaction.number).to eq("332546") }
+      it { expect(@response.transaction.card.number).to eq("4111111111111111") }
+      it { expect(@response.transaction.card.description).to eq("VISA")}
+      it { expect(@response.transaction.card.type).to eq("6")}
+      it { expect(@response.transaction.card.expiry).to eq("01/01")}
+
+      it "should have receipt" do
+        expect(@response.transaction.receipt.to_s.strip).to eq(@receipt.strip)
+      end
     end
 
   end

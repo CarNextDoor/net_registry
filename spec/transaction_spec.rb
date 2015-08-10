@@ -6,7 +6,6 @@ RSpec.describe NetRegistry::Transaction do
 
   describe "#card" do
     it "assigns card object" do
-      expect(transaction.card).to be_nil
       transaction.card = card
       expect(transaction.card).to eq(card)
     end

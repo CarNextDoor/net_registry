@@ -1,7 +1,7 @@
 require 'date'
 
 module NetRegistry
-  class ResponseFactory
+  class ResponseBuilder
 
     attr_reader :response
 
@@ -62,49 +62,49 @@ module NetRegistry
         @full_response.each do |line|
           data = line.split("=")
           case data.first
-          when "card_number"
-            @response.transaction      ||= NetRegistry::Transaction.new
-            @response.transaction.card ||= NetRegistry::Card.new
+          when "card_number", "card_no"
             @response.transaction.card.number = data[1]
-          when "settlement_date"
           when "response_text"
             @response.text = data[1].to_s
-          when "amount"
-            @response.transaction      ||= NetRegistry::Transaction.new
+          when "amount", "total_amount"
             @response.transaction.amount = data[1]
           when "status"
             @response.status = data[1]
-          when "txnref"
-            @response.transaction      ||= NetRegistry::Transaction.new
+          when "txnref", "txn_ref"
             @response.transaction.reference = data[1]
+          when "transaction_no"
+            @response.transaction.number = data[1]
           when "bank_ref"
-            @response.transaction      ||= NetRegistry::Transaction.new
             @response.transaction.bank_reference = data[1]
           when "card_desc"
-            @response.transaction      ||= NetRegistry::Transaction.new
-            @response.transaction.card ||= NetRegistry::Card.new
             @response.transaction.card.description = data[1]
           when "response_code"
             @response.code = data[1]
-          when "card_expiry"
-          when "MID"
           when "card_type"
-            @response.transaction      ||= NetRegistry::Transaction.new
-            @response.transaction.card ||= NetRegistry::Card.new
             @response.transaction.card.type = data[1]
           when "time"
-            @response.transaction      ||= NetRegistry::Transaction.new
             @response.transaction.time = data[1]
           when "command"
-            @response.transaction      ||= NetRegistry::Transaction.new
             @response.transaction.command = data[1]
+          when "card_expiry"
+            @response.transaction.card.expiry = data[1]
           when "result"
             @response.result = data[1]
+          when "settlement_date"
+            @response.transaction.settlement_date = data[1]
+          when "rrn"
+            @response.transaction.rrn = data[1]
+          when "MID"
+            @response.transaction.merchant_id = data[1]
           else
           end
         end
+        @receipt = @full_response.drop_while { |line| !line.include?("Reciept follows") }
+        if @receipt.include?("Reciept follows")
+          @receipt = @receipt[1...-2]
+          @response.transaction.receipt = @receipt.join("\n")
+        end
       end
-
 
       self
     end

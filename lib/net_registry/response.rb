@@ -1,6 +1,6 @@
 module NetRegistry
   class Response
-    attr_accessor :text, :status, :full_response, :transaction
+    attr_accessor :text, :status, :full_response
     attr_reader   :code, :result
 
     def initialize(text: "Unknown Error", code: -1, status: "failed", result: -1)
@@ -27,6 +27,10 @@ module NetRegistry
     def transaction=(transaction)
       raise TypeError, "Not NetRegistry::Transaction" if !transaction.is_a?(NetRegistry::Transaction)
       @transaction = transaction
+    end
+
+    def transaction
+      @transaction ||= NetRegistry::Transaction.new
     end
 
   end

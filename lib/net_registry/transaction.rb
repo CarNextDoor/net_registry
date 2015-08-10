@@ -5,12 +5,19 @@ module NetRegistry
                   :reference,
                   :bank_reference,
                   :command,
-                  :time
-    attr_reader   :card
+                  :time,
+                  :number,
+                  :rrn,
+                  :merchant_id,
+                  :receipt
 
     def card=(card)
       raise TypeError, "Invalid class" if !card.is_a? NetRegistry::Card
       @card = card
+    end
+
+    def card
+      @card ||= NetRegistry::Card.new
     end
 
   end

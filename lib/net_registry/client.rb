@@ -11,7 +11,7 @@ module NetRegistry
       @LOGIN    = "#{@merchant}/#{@password}"
       @base_url = "https://paygate.ssllock.net/external2.pl"
       @uri      = URI(@base_url)
-      @factory  = NetRegistry::ResponseFactory.new
+      @factory  = NetRegistry::ResponseBuilder.new
     end
 
     def purchase(params = {})
