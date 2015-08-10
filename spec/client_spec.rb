@@ -122,9 +122,9 @@ RSpec.describe NetRegistry::Client do
 
         response = client.purchase(params)
         expect(response.class).to  eq(NetRegistry::Response)
-        expect(response.text).to   eq("")
-        expect(response.code).to   eq(0)
-        expect(response.status).to eq("")
+        expect(response.text).to   eq("INVALID TRANSACTION")
+        expect(response.code).to   eq(12)
+        expect(response.status).to eq("declined")
       end
 
       it "has key :CCNUM with nil as value" do
@@ -149,9 +149,9 @@ RSpec.describe NetRegistry::Client do
         .to_return(status: 200, body: purchase_success_response, headers: {})
         response = client.purchase(params)
         expect(response.class).to  eq(NetRegistry::Response)
-        expect(response.text).to   eq("")
-        expect(response.code).to   eq(0)
-        expect(response.status).to eq("")
+        expect(response.text).to   eq("INVALID TRANSACTION")
+        expect(response.code).to   eq(12)
+        expect(response.status).to eq("declined")
       end
 
     end
@@ -191,9 +191,9 @@ RSpec.describe NetRegistry::Client do
         .to_return(status: 200, body: purchase_success_response, headers: {})
         response = client.refund(params)
         expect(response.class).to  eq(NetRegistry::Response)
-        expect(response.text).to   eq("")
-        expect(response.code).to   eq(0)
-        expect(response.status).to eq("")
+        expect(response.text).to   eq("INVALID TRANSACTION")
+        expect(response.code).to   eq(12)
+        expect(response.status).to eq("declined")
       end
 
       it "has key :TXNREF with nil as value" do
@@ -218,9 +218,9 @@ RSpec.describe NetRegistry::Client do
         .to_return(status: 200, body: purchase_success_response, headers: {})
         response = client.refund(params)
         expect(response.class).to  eq(NetRegistry::Response)
-        expect(response.text).to   eq("")
-        expect(response.code).to   eq(0)
-        expect(response.status).to eq("")
+        expect(response.text).to   eq("INVALID TRANSACTION")
+        expect(response.code).to   eq(12)
+        expect(response.status).to eq("declined")
       end
 
     end

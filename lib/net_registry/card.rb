@@ -6,5 +6,13 @@ module NetRegistry
                   :ccv,
                   :type
 
+    def initialize(number: nil, description: nil, expiry: nil, ccv: nil, type: nil)
+      @number      = number
+      @description = description
+      @expiry      = expiry
+      @ccv         = ccv
+      @type        = type
+    end
+
   end
 end

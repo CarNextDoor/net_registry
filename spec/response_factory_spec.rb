@@ -19,6 +19,27 @@ RSpec.describe NetRegistry::ResponseFactory do
     result=-1
     RESPONSE
   end
+  let(:status_invalid_transaction) do
+    <<-RESPONSE
+    card_number=XXXXXXXXXXXX1111
+    settlement_date=31/07/00
+    response_text=INVALID TRANSACTION
+    amount=100
+    status=complete
+    txnref=0007311428202312
+    bank_ref=000731000024
+    card_desc=VISA
+    response_code=12
+    card_expiry=01/01
+    MID=24
+    card_type=6
+    time=2000­07­31 14:28:20
+    command=purchase
+    result=0
+    .
+    done=1
+    RESPONSE
+  end
   describe "#init" do
     it { expect(factory.response.class).to be(NetRegistry::Response) }
   end
@@ -28,11 +49,41 @@ RSpec.describe NetRegistry::ResponseFactory do
       it { expect {factory.parse(1)}.to raise_error(TypeError)}
     end
     context "failed response (invalid params)" do
-      it { expect(factory.parse(invalid_credit_card_number).create.text).to eq("Invalid Credit card number") }
+      before :each do
+        @response = factory.parse(invalid_credit_card_number).create
+      end
+      it { expect(@response.text).to   eq("Invalid Credit card number") }
+      it { expect(@response.status).to eq("failed")                     }
+      it { expect(@response.code).to   eq(-1)                           }
+      it { expect(@response.result).to eq(-1)                           }
     end
     context "failed response (invalid login)" do
-      it { expect(factory.parse(invalid_login_format).create.text).to eq("Invalid login format") }
+      before :each do
+        @response = factory.parse(invalid_login_format).create
+      end
+      it { expect(@response.text).to   eq("Invalid login format")       }
+      it { expect(@response.status).to eq("failed")                     }
+      it { expect(@response.code).to   eq(-1)                           }
+      it { expect(@response.result).to eq(-1)                           }
     end
+    context "#status_invalid_transaction" do
+      before :each do
+        @response = factory.parse(status_invalid_transaction).create
+      end
+      it { expect(@response.text).to eq("INVALID TRANSACTION") }
+      it { expect(@response.transaction.card.number).to eq("XXXXXXXXXXXX1111") }
+      it { expect(@response.transaction.amount).to eq("100") }
+      it { expect(@response.status).to eq("complete") }
+      it { expect(@response.transaction.reference).to eq("0007311428202312") }
+      it { expect(@response.transaction.bank_reference).to eq("000731000024")}
+      it { expect(@response.transaction.card.description).to eq("VISA")}
+      it { expect(@response.code).to eq(12) }
+      it { expect(@response.transaction.card.type).to eq("6")}
+      it { expect(@response.transaction.time).to eq("2000­07­31 14:28:20")}
+      it { expect(@response.transaction.command).to eq("purchase")}
+      it { expect(@response.result).to eq(0)}
+    end
+
   end
 
   describe "#create" do

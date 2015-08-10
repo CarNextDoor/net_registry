@@ -30,6 +30,7 @@ module NetRegistry
         success        = false
       end
       @response.code   = 0  if success
+      @response.result = 0  if success
       @response.status = "" if success
 
       @response.success?
@@ -57,7 +58,53 @@ module NetRegistry
         end
         @response.status = "failed"
         @response.code   = -1
+      else
+        @full_response.each do |line|
+          data = line.split("=")
+          case data.first
+          when "card_number"
+            @response.transaction      ||= NetRegistry::Transaction.new
+            @response.transaction.card ||= NetRegistry::Card.new
+            @response.transaction.card.number = data[1]
+          when "settlement_date"
+          when "response_text"
+            @response.text = data[1].to_s
+          when "amount"
+            @response.transaction      ||= NetRegistry::Transaction.new
+            @response.transaction.amount = data[1]
+          when "status"
+            @response.status = data[1]
+          when "txnref"
+            @response.transaction      ||= NetRegistry::Transaction.new
+            @response.transaction.reference = data[1]
+          when "bank_ref"
+            @response.transaction      ||= NetRegistry::Transaction.new
+            @response.transaction.bank_reference = data[1]
+          when "card_desc"
+            @response.transaction      ||= NetRegistry::Transaction.new
+            @response.transaction.card ||= NetRegistry::Card.new
+            @response.transaction.card.description = data[1]
+          when "response_code"
+            @response.code = data[1]
+          when "card_expiry"
+          when "MID"
+          when "card_type"
+            @response.transaction      ||= NetRegistry::Transaction.new
+            @response.transaction.card ||= NetRegistry::Card.new
+            @response.transaction.card.type = data[1]
+          when "time"
+            @response.transaction      ||= NetRegistry::Transaction.new
+            @response.transaction.time = data[1]
+          when "command"
+            @response.transaction      ||= NetRegistry::Transaction.new
+            @response.transaction.command = data[1]
+          when "result"
+            @response.result = data[1]
+          else
+          end
+        end
       end
+
 
       self
     end
