@@ -182,6 +182,21 @@ module NetRegistry
       end
     end
 
+    def validate_completion_params(params)
+      if params[:PREAUTHNUM].nil? || params[:PREAUTHNUM].empty?
+        return "PREAUTHNUM not found", false
+      elsif params[:CCNUM].nil? || params[:CCNUM].empty?
+        return "CCNUM not found", false
+      elsif params[:CCEXP].nil? || params[:CCEXP].empty?
+        return "CCEXP not found", false
+      elsif !valid_expiry_format?(params[:CCEXP])
+        return "CCEXP invalid format", false
+      elsif params[:AMOUNT].nil? || params[:AMOUNT].empty?
+        return "AMOUNT not found", false
+      else
+        return "", true
+      end
+    end
 
     def valid_expiry_format?(card_expiry)
       raise TypeError if !card_expiry.is_a?(String)

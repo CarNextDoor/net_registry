@@ -323,4 +323,28 @@ RSpec.describe NetRegistry::ResponseBuilder do
       expect(factory.send(:validate_purchase_params, params.merge!(CCEXP: "What's up"))).to eq(["CCEXP invalid format", false])
     end
   end
+
+  describe "#validate_completion_params" do
+    let(:params) { {AMOUNT: "100", CCNUM: "111111111111", CCEXP: "10/15", PREAUTHNUM: "111111111"}}
+    it { expect(factory.send(:validate_completion_params, params)).to eq(["", true]) }
+    it "does not have amount in params hash" do
+      expect(factory.send(:validate_completion_params, params.merge!(AMOUNT: nil))).to eq(["AMOUNT not found", false])
+      expect(factory.send(:validate_completion_params, params.merge!(AMOUNT: ""))).to eq(["AMOUNT not found", false])
+    end
+
+    it "does not have CCNUM in params hash" do
+      expect(factory.send(:validate_completion_params, params.merge!(CCNUM: nil))).to eq(["CCNUM not found", false])
+      expect(factory.send(:validate_completion_params, params.merge!(CCNUM: ""))).to eq(["CCNUM not found", false])
+    end
+
+    it "does not have CCEXP in params hash" do
+      expect(factory.send(:validate_completion_params, params.merge!(CCEXP: nil))).to eq(["CCEXP not found", false])
+      expect(factory.send(:validate_completion_params, params.merge!(CCEXP: ""))).to eq(["CCEXP not found", false])
+    end
+
+    it "invalid CCEXP format" do
+      expect(factory.send(:validate_completion_params, params.merge!(CCEXP: "12/29/2015"))).to eq(["CCEXP invalid format", false])
+      expect(factory.send(:validate_completion_params, params.merge!(CCEXP: "What's up"))).to eq(["CCEXP invalid format", false])
+    end
+  end
 end

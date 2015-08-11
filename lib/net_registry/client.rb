@@ -35,7 +35,7 @@ module NetRegistry
       @login    = "#{@merchant_id}/#{@password}"
       @base_url = "https://paygate.ssllock.net/external2.pl"
       @uri      = URI(@base_url)
-      @factory  = NetRegistry::ResponseBuilder.new
+      @builder  = NetRegistry::ResponseBuilder.new
     end
 
     # Alias for
@@ -66,17 +66,24 @@ module NetRegistry
       request(params.merge!(COMMAND: "preauth"))
     end
 
+    # Alias for
+    # require(COMMAND: "completion", PREAUTHNUM: .... etc)
+    def completion(params = {})
+      raise TypeError, "params is not a hash" if !params.is_a?(Hash)
+      request(params.merge!(COMMAND: "completion"))
+    end
+
     def request(params = {})
       raise TypeError, "params is not a hash" if !params.is_a?(Hash)
       params.merge!(LOGIN: @login)
-      @factory.verify_params(params) ? send_request(params) : @factory.create
+      @builder.verify_params(params) ? send_request(params) : @builder.create
     end
 
     private
 
     def send_request(params)
       res = Net::HTTP.post_form(@uri, params)
-      @factory.parse(res.body).create
+      @builder.parse(res.body).create
     end
 
   end
