@@ -41,7 +41,7 @@ RSpec.describe NetRegistry::Client do
     <<-STATUS
     card_number=#{params[:CCNUM]}
     settlement_date=31/07/00
-    response_text=INVALID TRANSACTION
+    response_text=INVALID TRANSACTION
     amount=#{params[:AMOUNT]}
     status=complete
     txnref=#{params[:TXNREF]}
@@ -51,7 +51,7 @@ RSpec.describe NetRegistry::Client do
     card_expiry=01/01
     MID=24
     card_type=6
-    time=2000­07­31 14:28:20
+    time=2000-07-31 14:28:20
     command=purchase
     result=0
     .
@@ -76,7 +76,7 @@ RSpec.describe NetRegistry::Client do
     cashout_amount=0
     account_type=CREDIT A/C
     rrn=000782000024
-    response_text=INVALID TRANSACTION
+    response_text=INVALID TRANSACTION
     txn_ref=0007311458332546
     card_no=4111111111111111
     total_amount=100
@@ -84,27 +84,27 @@ RSpec.describe NetRegistry::Client do
     card_expiry=01/01
     card_type=6
     result=0
-    Reciept follows
-    Transaction No: 00332546
-    ­­­­­­­­­­­­­­­­­­­­­­­­
-    TYRELL CORPORATION    
-    MERCH ID        99999999
-    TERM  ID          Y9TB99
-    COUNTRY CODE AU
-    31/07/00           14:32
-    RRN         000782000024
+    Reciept follows
+    Transaction No: 00332546
+            ---------------
+    TYRELL CORPORATION
+    MERCH ID        99999999
+    TERM  ID          Y9TB99
+    COUNTRY CODE AU
+    31/07/00           14:32
+    RRN         000782000024
     VISA
-    411111­111
-    CREDIT A/C         01/01
-    AUTHORISATION��NO:
-    DECLINED   12
-    PURCHASE           $1.00
-    TOTAL   AUD        $1.00
-    PLEASE RETAIN AS RECORD 
-    OF PURCHASE
-    (SUBJECT TO CARDHOLDER'S
-    ACCEPTANCE)      
-    ­­­­­­­­­­­­­­­­­­­­­­­­
+    411111-111
+    CREDIT A/C         01/01
+    AUTHORISATION  NO:
+    DECLINED   12
+    PURCHASE           $1.00
+    TOTAL   AUD        $1.00
+    PLEASE RETAIN AS RECORD
+    OF PURCHASE
+    (SUBJECT TO CARDHOLDER'S
+    ACCEPTANCE) 
+            ---------------
     .
     done=1
     PURCHASE
@@ -146,7 +146,7 @@ RSpec.describe NetRegistry::Client do
 
         response = client.purchase(params)
         expect(response.class).to  eq(NetRegistry::Response)
-        expect(response.text).to   eq("INVALID TRANSACTION")
+        expect(response.text).to   eq("INVALID TRANSACTION")
         expect(response.code).to   eq(12)
         expect(response.status).to eq("declined")
       end
@@ -173,7 +173,7 @@ RSpec.describe NetRegistry::Client do
         .to_return(status: 200, body: purchase_success_response, headers: {})
         response = client.purchase(params)
         expect(response.class).to  eq(NetRegistry::Response)
-        expect(response.text).to   eq("INVALID TRANSACTION")
+        expect(response.text).to   eq("INVALID TRANSACTION")
         expect(response.code).to   eq(12)
         expect(response.status).to eq("declined")
       end
@@ -215,7 +215,7 @@ RSpec.describe NetRegistry::Client do
         .to_return(status: 200, body: purchase_success_response, headers: {})
         response = client.refund(params)
         expect(response.class).to  eq(NetRegistry::Response)
-        expect(response.text).to   eq("INVALID TRANSACTION")
+        expect(response.text).to   eq("INVALID TRANSACTION")
         expect(response.code).to   eq(12)
         expect(response.status).to eq("declined")
       end
@@ -242,7 +242,7 @@ RSpec.describe NetRegistry::Client do
         .to_return(status: 200, body: purchase_success_response, headers: {})
         response = client.refund(params)
         expect(response.class).to  eq(NetRegistry::Response)
-        expect(response.text).to   eq("INVALID TRANSACTION")
+        expect(response.text).to   eq("INVALID TRANSACTION")
         expect(response.code).to   eq(12)
         expect(response.status).to eq("declined")
       end
