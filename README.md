@@ -1,4 +1,5 @@
-# NetRegistry
+# NetRegistry [![Build
+Status](https://travis-ci.org/CarNextDoor/net_registry.svg?branch=master)](https://travis-ci.org/CarNextDoor/net_registry)
 
 This gem serves as a Ruby wrapper for the NetRegistry Payment Gateway's
 API. Official documentation can be found [http://www.netregistry.com.au/ee-images/uploads/support/NR-ecom-gateway8.pdf](here)
