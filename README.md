@@ -1,4 +1,5 @@
-# NetRegistry [![Build
+# NetRegistry
+[![Build
 Status](https://travis-ci.org/CarNextDoor/net_registry.svg?branch=master)](https://travis-ci.org/CarNextDoor/net_registry)
 
 This gem serves as a Ruby wrapper for the NetRegistry Payment Gateway's
