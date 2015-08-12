@@ -23,6 +23,8 @@ Bundler.setup
 require 'webmock/rspec'
 WebMock.disable_net_connect!(allow_localost: true)
 require 'net_registry'
+require 'coveralls'
+Coveralls.wear!
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
