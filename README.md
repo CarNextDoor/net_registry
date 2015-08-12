@@ -46,13 +46,13 @@ Input:
 ``` ruby
 {
   AMOUNT: "(Integer, Float, or String). The amount you would like to
-  charge. Don't add "$", just the numerical amount.",
+  charge. Don't add '$', just the numerical amount.",
 
   CCNUM: "(Integer, String). The credit card number. NO SPACES OR
   DASH",
 
   CCEXP: "(String). Credit card expiry date. Must be in the format of
-  "mm/yy"."
+  'mm/yy'."
 }
 ```
 
@@ -64,7 +64,7 @@ Input:
 ``` ruby
 {
   AMOUNT: "(Integer, Float, or String). The amount you would like to
-  charge. Don't add "$", just the numerical amount.",
+  charge. Don't add '$', just the numerical amount.",
 
   TXNREF: "(String). Transaction reference number"
 }
@@ -79,13 +79,13 @@ Input:
 ``` ruby
 {
   AMOUNT: "(Integer, Float, or String). The amount you would like to
-  charge. Don't add "$", just the numerical amount.",
+  charge. Don't add '$', just the numerical amount.",
 
   CCNUM: "(Integer, String). The credit card number. NO SPACES OR
   DASH",
 
   CCEXP: "(String). Credit card expiry date. Must be in the format of
-  \"mm/yy\"".
+  'mm/yy'".
 }
 ```
 
