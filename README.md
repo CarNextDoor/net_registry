@@ -1,6 +1,7 @@
 # NetRegistry
 [![Build
 Status](https://travis-ci.org/CarNextDoor/net_registry.svg?branch=master)](https://travis-ci.org/CarNextDoor/net_registry)
+[![Gem Version](https://badge.fury.io/rb/net_registry.svg)](http://badge.fury.io/rb/net_registry)
 
 This gem serves as a Ruby wrapper for the NetRegistry Payment Gateway's
 API. Official documentation can be found [http://www.netregistry.com.au/ee-images/uploads/support/NR-ecom-gateway8.pdf](here)
@@ -44,14 +45,14 @@ Input:
 
 ``` ruby
 {
-  AMOUNT: (Integer, Float, or String). The amount you would like to
-  charge. Don't add "$", just the numerical amount.,
+  AMOUNT: "(Integer, Float, or String). The amount you would like to
+  charge. Don't add "$", just the numerical amount.",
 
-  CCNUM: (Integer, String). The credit card number. NO SPACES OR
-  DASH,
+  CCNUM: "(Integer, String). The credit card number. NO SPACES OR
+  DASH",
 
-  CCEXP: (String). Credit card expiry date. Must be in the format of
-  "mm/yy".
+  CCEXP: "(String). Credit card expiry date. Must be in the format of
+  "mm/yy"."
 }
 ```
 
@@ -62,10 +63,10 @@ Returns: NetRegistry::Response object.
 Input:
 ``` ruby
 {
-  AMOUNT: (Integer, Float, or String). The amount you would like to
-  charge. Don't add "$", just the numerical amount.,
+  AMOUNT: "(Integer, Float, or String). The amount you would like to
+  charge. Don't add "$", just the numerical amount.",
 
-  TXNREF: (String). Transaction reference number
+  TXNREF: "(String). Transaction reference number"
 }
 ```
 
@@ -77,14 +78,14 @@ Input:
 
 ``` ruby
 {
-  AMOUNT: (Integer, Float, or String). The amount you would like to
-  charge. Don't add "$", just the numerical amount.,
+  AMOUNT: "(Integer, Float, or String). The amount you would like to
+  charge. Don't add "$", just the numerical amount.",
 
-  CCNUM: (Integer, String). The credit card number. NO SPACES OR
-  DASH,
+  CCNUM: "(Integer, String). The credit card number. NO SPACES OR
+  DASH",
 
-  CCEXP: (String). Credit card expiry date. Must be in the format of
-  "mm/yy".
+  CCEXP: "(String). Credit card expiry date. Must be in the format of
+  \"mm/yy\"".
 }
 ```
 
@@ -95,7 +96,7 @@ Returns: NetRegistry::Response object.
 Input:
 ``` ruby
 {
-  TXNREF: (String). Transaction reference number
+  TXNREF: "(String). Transaction reference number"
 }
 ```
 
