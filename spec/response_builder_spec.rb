@@ -57,7 +57,7 @@ RSpec.describe NetRegistry::ResponseBuilder do
     card_expiry=01/01
     MID=24
     card_type=6
-    time=2000­07­31 14:28:20
+    time=2000-07-31 14:28:20
     command=purchase
     result=0
     .
@@ -79,9 +79,9 @@ RSpec.describe NetRegistry::ResponseBuilder do
     response_code=12
     receipt_array=ARRAY(0x8221b9c)
     cashout_amount=0
-    account_type=CREDIT A/C
+    account_type=CREDIT A/C
     rrn=000782000024
-    response_text=INVALID TRANSACTION
+    response_text=INVALID TRANSACTION
     txn_ref=0007311458332546
     card_no=4111111111111111
     total_amount=100
@@ -89,27 +89,27 @@ RSpec.describe NetRegistry::ResponseBuilder do
     card_expiry=01/01
     card_type=6
     result=0
-    Reciept follows
-    Transaction No: 00332546
-    ­­­­­­­­­­­­­­­­­­­­­­­­
-    TYRELL CORPORATION    
-    MERCH ID        99999999
-    TERM  ID          Y9TB99
-    COUNTRY CODE AU
-    31/07/00           14:32
-    RRN         000782000024
+    Reciept follows
+    Transaction No: 00332546
+            ---------------
+    TYRELL CORPORATION
+    MERCH ID        99999999
+    TERM  ID          Y9TB99
+    COUNTRY CODE AU
+    31/07/00           14:32
+    RRN         000782000024
     VISA
-    411111­111
-    CREDIT A/C         01/01
+    411111-111
+    CREDIT A/C         01/01
     AUTHORISATION  NO:
-    DECLINED   12
-    PURCHASE           $1.00
-    TOTAL   AUD        $1.00
-    PLEASE RETAIN AS RECORD 
-    OF PURCHASE
-    (SUBJECT TO CARDHOLDER'S
-    ACCEPTANCE)      
-    ­­­­­­­­­­­­­­­­­­­­­­­­
+    DECLINED   12
+    PURCHASE           $1.00
+    TOTAL   AUD        $1.00
+    PLEASE RETAIN AS RECORD
+    OF PURCHASE
+    (SUBJECT TO CARDHOLDER'S
+    ACCEPTANCE)
+            ---------------
     .
     done=1
     RESPONSE
@@ -151,7 +151,7 @@ RSpec.describe NetRegistry::ResponseBuilder do
 
       it { expect(@response.transaction.amount).to eq("100") }
       it { expect(@response.transaction.reference).to eq("0007311428202312") }
-      it { expect(@response.transaction.time).to eq("2000­07­31 14:28:20")}
+      it { expect(@response.transaction.time).to eq("2000-07-31 14:28:20")}
       it { expect(@response.transaction.command).to eq("purchase")}
       it { expect(@response.transaction.settlement_date).to eq("31/07/00")}
       it { expect(@response.transaction.bank_reference).to eq("000731000024")}
@@ -168,29 +168,29 @@ RSpec.describe NetRegistry::ResponseBuilder do
       before :each do
         @response = factory.parse(purchase_invalid_transaction).create
         @receipt  = <<-RECEIPT.gsub(/^\s+/, "")
-        Transaction No: 00332546
-        ­­­­­­­­­­­­­­­­­­­­­­­­
-        TYRELL CORPORATION    
-        MERCH ID        99999999
-        TERM  ID          Y9TB99
-        COUNTRY CODE AU
-        31/07/00           14:32
-        RRN         000782000024
+        Transaction No: 00332546
+                ---------------
+        TYRELL CORPORATION
+        MERCH ID        99999999
+        TERM  ID          Y9TB99
+        COUNTRY CODE AU
+        31/07/00           14:32
+        RRN         000782000024
         VISA
-        411111­111
-        CREDIT A/C         01/01
+        411111-111
+        CREDIT A/C         01/01
         AUTHORISATION  NO:
-        DECLINED   12
-        PURCHASE           $1.00
-        TOTAL   AUD        $1.00
-        PLEASE RETAIN AS RECORD 
-        OF PURCHASE
-        (SUBJECT TO CARDHOLDER'S
-        ACCEPTANCE)      
-        ­­­­­­­­­­­­­­­­­­­­­­­­
+        DECLINED   12
+        PURCHASE           $1.00
+        TOTAL   AUD        $1.00
+        PLEASE RETAIN AS RECORD
+        OF PURCHASE
+        (SUBJECT TO CARDHOLDER'S
+        ACCEPTANCE)
+                ---------------
         RECEIPT
       end
-      it { expect(@response.text).to eq("INVALID TRANSACTION") }
+      it { expect(@response.text).to eq("INVALID TRANSACTION") }
       it { expect(@response.transaction.reference).to eq("0007311458332546") }
       it { expect(@response.transaction.rrn).to eq("000782000024")}
       it { expect(@response.result).to eq(0)}

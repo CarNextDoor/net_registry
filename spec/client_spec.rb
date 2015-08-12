@@ -74,7 +74,7 @@ RSpec.describe NetRegistry::Client do
     response_code=12
     receipt_array=ARRAY(0x8221b9c)
     cashout_amount=0
-    account_type=CREDIT A/C
+    account_type=CREDIT A/C
     rrn=000782000024
     response_text=INVALID TRANSACTION
     txn_ref=0007311458332546
@@ -103,7 +103,7 @@ RSpec.describe NetRegistry::Client do
     PLEASE RETAIN AS RECORD
     OF PURCHASE
     (SUBJECT TO CARDHOLDER'S
-    ACCEPTANCE) 
+    ACCEPTANCE)
             ---------------
     .
     done=1

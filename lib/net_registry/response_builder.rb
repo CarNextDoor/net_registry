@@ -123,8 +123,8 @@ module NetRegistry
           else
           end
         end
-        @receipt = @full_response.drop_while { |line| !line.include?("Reciept follows") }
-        if @receipt.include?("Reciept follows")
+        @receipt = @full_response.drop_while { |line| !line.include?("Reciept follows") }
+        if @receipt.include?("Reciept follows")
           @receipt = @receipt[1...-2]
           @response.transaction.receipt = @receipt.join("\n")
         end

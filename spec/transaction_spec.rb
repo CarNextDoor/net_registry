@@ -86,7 +86,7 @@ RSpec.describe NetRegistry::Transaction do
 
   describe "#time" do
     it "assigns time" do
-      time = "2000­07­31 14:28:20"
+      time = "2000-07-31 14:28:20"
       expect(transaction.time).to be_nil
       transaction.time = time
       expect(transaction.time).to eq(time)
