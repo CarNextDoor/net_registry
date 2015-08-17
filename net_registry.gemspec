@@ -44,10 +44,10 @@ API. Official documentation can be found at http://www.netregistry.com.au/ee-ima
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
-  spec.required_ruby_version = '>= 2.0'
+  spec.required_ruby_version = '>= 2.1.0'
 
   spec.add_development_dependency "bundler", "~> 1.6"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec"
-  spec.add_development_dependency "webmock"
+  spec.add_development_dependency "rake", "~> 10.4.2"
+  spec.add_development_dependency "rspec", "~> 3.3.0"
+  spec.add_development_dependency "webmock", "~> 1.21.0"
 end
