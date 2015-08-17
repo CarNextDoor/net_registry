@@ -224,7 +224,7 @@ RSpec.describe NetRegistry::ResponseBuilder do
     it "has not provided with a COMMAND" do
       factory.verify_params(invalid_status_params)
       response = factory.create
-      expect(response.text).to eq("Invalid command. Only [purchase status preauth refund] are valid.")
+      expect(response.text).to eq("Invalid command. Only [purchase status preauth refund completion] are valid.")
       expect(response.status).to eq("failed")
       expect(response.code).to eq(-1)
     end

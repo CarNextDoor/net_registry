@@ -38,8 +38,8 @@ module NetRegistry
     #                   purchase, refund, preauth, status.
     # params (Hash):    Variables to pass to NetRegistry
     def verify_params(params = {})
-      success  = false
-      params = process_params(params)
+      success = false
+      params  = process_params(params)
       case params[:COMMAND]
       when "purchase"
         @response.text, success = validate_purchase_params(params)
@@ -49,8 +49,10 @@ module NetRegistry
         @response.text, success = validate_preauth_params(params)
       when "status"
         @response.text, success = validate_status_params(params)
+      when "completion"
+        @response.text, success = validate_completion_params(params)
       else
-        @response.text = "Invalid command. Only [purchase status preauth refund] are valid."
+        @response.text = "Invalid command. Only [purchase status preauth refund completion] are valid."
         success        = false
       end
       @response.code   = 0  if success
@@ -65,66 +67,22 @@ module NetRegistry
     end
 
     # parse HTTP request response body into a response object
-    # return factory itself.
+    # return builder itself.
     # To get the response object, use #create method
     def parse(response)
       raise TypeError, "Response is not a string" if !response.is_a?(String)
       @full_response = response.split("\n").map(&:strip)
       if @full_response.first == "failed"
-        # remove all spaces until the dot
-        lines = @full_response.drop_while { |x| x != "." }
-        if lines.empty?
-          @response.text = @full_response[1]
-        else
-          lines.shift
-          lines[0].slice!("response_text=")
-          @response.text = lines[0]
-        end
-        @response.status = "failed"
-        @response.code   = -1
+        parse_failed_response
       else
         @full_response.each do |line|
-          data = line.split("=")
-          case data.first
-          when "card_number", "card_no"
-            @response.transaction.card.number = data[1]
-          when "response_text"
-            @response.text = data[1].to_s
-          when "amount", "total_amount"
-            @response.transaction.amount = data[1]
-          when "status"
-            @response.status = data[1]
-          when "txnref", "txn_ref"
-            @response.transaction.reference = data[1]
-          when "transaction_no"
-            @response.transaction.number = data[1]
-          when "bank_ref"
-            @response.transaction.bank_reference = data[1]
-          when "card_desc"
-            @response.transaction.card.description = data[1]
-          when "response_code"
-            @response.code = data[1]
-          when "card_type"
-            @response.transaction.card.type = data[1]
-          when "time"
-            @response.transaction.time = data[1]
-          when "command"
-            @response.transaction.command = data[1]
-          when "card_expiry"
-            @response.transaction.card.expiry = data[1]
-          when "result"
-            @response.result = data[1]
-          when "settlement_date"
-            @response.transaction.settlement_date = data[1]
-          when "rrn"
-            @response.transaction.rrn = data[1]
-          when "MID"
-            @response.transaction.merchant_id = data[1]
-          else
-          end
+          data  = line.split("=")
+          parse_success_line(key: data[0], value: data[1])
         end
         @receipt = @full_response.drop_while { |line| !line.include?("Reciept follows") }
         if @receipt.include?("Reciept follows")
+          # Don't want the "Reciept follows" line, nor the "." and "done" line.
+          # Only want the receipt in between
           @receipt = @receipt[1...-2]
           @response.transaction.receipt = @receipt.join("\n")
         end
@@ -134,6 +92,59 @@ module NetRegistry
     end
 
     protected
+    def parse_failed_response
+      # remove all spaces until the dot
+      lines = @full_response.drop_while { |x| x != "." }
+      if lines.empty?
+        @response.text = @full_response[1]
+      else
+        lines.shift
+        lines[0].slice!("response_text=")
+        @response.text = lines[0]
+      end
+      @response.status = "failed"
+      @response.code   = -1
+    end
+
+    def parse_success_line(key:, value:)
+      case key
+      when "card_number", "card_no"
+        @response.transaction.card.number = value
+      when "response_text"
+        @response.text = value
+      when "response_code"
+        @response.code = value
+      when "status"
+        @response.status = value
+      when "result"
+        @response.result = value
+      when "amount", "total_amount"
+        @response.transaction.amount = value
+      when "time"
+        @response.transaction.time = value
+      when "command"
+        @response.transaction.command = value
+      when "txnref", "txn_ref"
+        @response.transaction.reference = value
+      when "transaction_no"
+        @response.transaction.number = value
+      when "bank_ref"
+        @response.transaction.bank_reference = value
+      when "settlement_date"
+        @response.transaction.settlement_date = value
+      when "rrn"
+        @response.transaction.rrn = value
+      when "MID"
+        @response.transaction.merchant_id = value
+      when "card_type"
+        @response.transaction.card.type = value
+      when "card_expiry"
+        @response.transaction.card.expiry = value
+      when "card_desc"
+        @response.transaction.card.description = value
+      end
+    end
+
     # Preliminary validation for the purchase method
     # Returns a Response Object
     def validate_purchase_params(params)
