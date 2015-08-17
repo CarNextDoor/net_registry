@@ -142,6 +142,8 @@ module NetRegistry
         @response.transaction.card.expiry = value
       when "card_desc"
         @response.transaction.card.description = value
+      when "comment"
+        @response.transaction.comment = value
       end
     end
 

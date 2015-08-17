@@ -93,5 +93,12 @@ RSpec.describe NetRegistry::Transaction do
     end
   end
 
-
+  describe "#comment" do
+    it "assigns comment" do
+      comment = "This is a comment"
+      expect(transaction.comment).to be_nil
+      transaction.comment = comment
+      expect(transaction.comment).to eq(comment)
+    end
+  end
 end

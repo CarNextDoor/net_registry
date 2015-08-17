@@ -33,7 +33,8 @@ module NetRegistry
                   :number,
                   :rrn,
                   :merchant_id,
-                  :receipt
+                  :receipt,
+                  :comment
 
     def card=(card)
       raise TypeError, "Invalid class" if !card.is_a? NetRegistry::Card
