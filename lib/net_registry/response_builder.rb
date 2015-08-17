@@ -119,7 +119,8 @@ module NetRegistry
       when "result"
         @response.result = value
       when "amount", "total_amount"
-        @response.transaction.amount = value
+        # API returns 100 for $1.00
+        @response.transaction.amount = (value.to_f / 100).round(2)
       when "time"
         @response.transaction.time = value
       when "command"
@@ -134,7 +135,7 @@ module NetRegistry
         @response.transaction.settlement_date = value
       when "rrn"
         @response.transaction.rrn = value
-      when "MID"
+      when "MID", "mid"
         @response.transaction.merchant_id = value
       when "card_type"
         @response.transaction.card.type = value
@@ -144,6 +145,8 @@ module NetRegistry
         @response.transaction.card.description = value
       when "comment"
         @response.transaction.comment = value
+      when "currency"
+        @response.transaction.currency = value
       end
     end
 

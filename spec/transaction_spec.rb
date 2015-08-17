@@ -101,4 +101,13 @@ RSpec.describe NetRegistry::Transaction do
       expect(transaction.comment).to eq(comment)
     end
   end
+
+  describe "#currency" do
+    it "assigns currency" do
+      currency = "AUD"
+      expect(transaction.currency).to be_nil
+      transaction.currency = currency
+      expect(transaction.currency).to eq(currency)
+    end
+  end
 end

@@ -45,23 +45,26 @@ RSpec.describe NetRegistry::ResponseBuilder do
   end
   let(:status_invalid_transaction) do
     <<-RESPONSE.gsub(/^\s+/, "")
-    card_number=XXXXXXXXXXXX1111
-    settlement_date=31/07/00
-    response_text=INVALID TRANSACTION
-    amount=100
-    status=complete
-    txnref=0007311428202312
-    bank_ref=000731000024
-    card_desc=VISA
-    response_code=12
-    card_expiry=01/01
-    MID=24
-    card_type=6
-    time=2000-07-31 14:28:20
-    command=purchase
-    result=0
+    complete
     .
-    done=1
+    settlement_date=20150817
+    card_desc=MASTERCARD
+    status=complete
+    txn_ref=1508170116471112
+    time=2015-08-17 01:16:47.442
+    bank_ref=2230000086261628
+    mid=2117
+    currency=AUD
+    response_text=INSUFFICIENT FUNDS
+    command=purchase
+    card_no=53719xxxxxxx6573
+    card_expiry=03/18
+    response_code=51
+    card_type=04
+    amount=18313
+    comment=purchase for member 3504
+    approved=0
+    result=0
     RESPONSE
   end
   let(:purchase_invalid_transaction) do
@@ -144,23 +147,23 @@ RSpec.describe NetRegistry::ResponseBuilder do
       before :each do
         @response = factory.parse(status_invalid_transaction).create
       end
-      it { expect(@response.text).to eq("INVALID TRANSACTION") }
+      it { expect(@response.text).to eq("INSUFFICIENT FUNDS") }
       it { expect(@response.status).to eq("complete") }
-      it { expect(@response.code).to eq(12) }
+      it { expect(@response.code).to eq(51) }
       it { expect(@response.result).to eq(0)}
 
-      it { expect(@response.transaction.amount).to eq("100") }
-      it { expect(@response.transaction.reference).to eq("0007311428202312") }
-      it { expect(@response.transaction.time).to eq("2000-07-31 14:28:20")}
+      it { expect(@response.transaction.amount).to eq(183.13) }
+      it { expect(@response.transaction.reference).to eq("1508170116471112") }
+      it { expect(@response.transaction.time).to eq("2015-08-17 01:16:47.442")}
       it { expect(@response.transaction.command).to eq("purchase")}
-      it { expect(@response.transaction.settlement_date).to eq("31/07/00")}
-      it { expect(@response.transaction.bank_reference).to eq("000731000024")}
-      it { expect(@response.transaction.merchant_id).to eq("24")}
+      it { expect(@response.transaction.settlement_date).to eq("20150817")}
+      it { expect(@response.transaction.bank_reference).to eq("2230000086261628")}
+      it { expect(@response.transaction.merchant_id).to eq("2117")}
 
-      it { expect(@response.transaction.card.number).to eq("XXXXXXXXXXXX1111") }
-      it { expect(@response.transaction.card.description).to eq("VISA")}
-      it { expect(@response.transaction.card.type).to eq("6")}
-      it { expect(@response.transaction.card.expiry).to eq("01/01")}
+      it { expect(@response.transaction.card.number).to eq("53719xxxxxxx6573") }
+      it { expect(@response.transaction.card.description).to eq("MASTERCARD")}
+      it { expect(@response.transaction.card.type).to eq("04")}
+      it { expect(@response.transaction.card.expiry).to eq("03/18")}
 
     end
 
